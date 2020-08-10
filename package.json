@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint --fix . && echo 'Lint complete.'",
+    "test": "NODE_ENV=test node -r @babel/register -r @babel/polyfill src/index.test.js",
+    "watch": "watch 'clear && npm run -s test | tap-nirvana && npm run -s lint' src",
     "dev": "next",
     "build": "next build",
     "start": "next start",
@@ -13,8 +16,27 @@
   "author": "Thomas Greco - github.com/tgrecojs",
   "license": "ISC",
   "dependencies": {
+    "bignumber.js": "^9.0.0",
     "next": "^9.5.1",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "web3": "^1.2.11"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "@babel/polyfill": "^7.10.4",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/preset-react": "^7.10.4",
+    "@babel/register": "^7.10.5",
+    "dotenv": "^8.2.0",
+    "eslint": "^7.6.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.20.5",
+    "eslint-plugin-react-hooks": "^4.0.8",
+    "prettier": "^2.0.5",
+    "riteway": "^6.1.2",
+    "tap-nirvana": "^1.1.0",
+    "watch": "^1.0.2"
   }
 }
