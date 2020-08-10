@@ -1,0 +1,1 @@
+{"ast":null,"code":"import React from \"react\";\nvar __jsx = React.createElement;\n\nconst LatestPrice = ({\n  coin = \"\",\n  price = \"\"\n}) => price !== \"\" && __jsx(\"h4\", null, \"Latest \", coin, \" Price: $\", price);\n\nexport default LatestPrice;","map":null,"metadata":{},"sourceType":"module"}
