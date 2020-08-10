@@ -1,0 +1,54 @@
+:root {
+  --main-font-color: #194b5f;
+  --light-font-color: #e4ece6;
+  --main-bg-color: #c6dddc;
+  --secondary-bg-color: #3e9096;
+}
+body {
+  margin: 0;
+}
+.app-wrapper {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;
+  background: var(--main-bg-color);
+  color: var(--main-font-color);
+}
+a {
+  font-style: italic;
+  font-weight: 500;
+  text-decoration: none;
+}
+.app-content a {
+  color: var(--secondary-bg-color);
+}
+
+footer {
+  text-align: center;
+  background-color: var(--secondary-bg-color);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+p,
+button {
+  padding: 0.5rem;
+}
+button {
+  margin: 0.5rem;
+  background: var(--secondary-bg-color);
+  color: var(--light-font-color);
+  border-radius: 0.25rem;
+  transition: all 0.4s ease-in-out;
+}
+
+button:hover {
+  transform: scale(1.1);
+}

@@ -2,24 +2,29 @@ import { useEffect, useState } from "react";
 import { string } from "prop-types";
 import useInfura from "../shared/hooks/useInfura";
 import LatestPrice from "../features/EthereumData/component";
-import BigNumber from "bignumber.js";
 import {
   ETHEREUM_ORACLE_ADDRESS,
   LINK_ORACLE_ADDRESS,
-} from "../shared/abis/ropsten.oracle";
+} from "../shared/abis/mainnet.oracle";
+import Wrapper from "../shared/layout/component";
+import {
+  formatBigNumberFn,
+  formatUnixTimestamp,
+  getLatestTimestamp,
+} from "../shared/utils/index";
 
 const Index = ({ title = "NextJS IPFS Application" }) => {
   const { oracle } = useInfura({
-    currentChain: process.env.INFURA_ROPSTEN,
+    currentChain: process.env.INFURA_MAINNET,
     oracleAddress: ETHEREUM_ORACLE_ADDRESS,
   });
 
   const { oracle: linkOracle } = useInfura({
-    currentChain: process.env.INFURA_ROPSTEN,
+    currentChain: process.env.INFURA_MAINNET,
     oracleAddress: LINK_ORACLE_ADDRESS,
   });
 
-  const [priceData, setPriceData] = useState("");
+  const [ethPriceData, setEthPriceData] = useState("");
   const [linkPriceData, setLinkPriceData] = useState("");
 
   const updateLink = () => {
@@ -28,7 +33,10 @@ const Index = ({ title = "NextJS IPFS Application" }) => {
         console.log(error);
         return;
       }
-      setLinkPriceData(new BigNumber(res).shiftedBy(-8).toFixed(2));
+      setLinkPriceData((x) => ({
+        ...x,
+        price: formatBigNumberFn(res),
+      }));
     });
   };
 
@@ -38,46 +46,79 @@ const Index = ({ title = "NextJS IPFS Application" }) => {
         console.log(error);
         return;
       }
-      setPriceData(new BigNumber(res).shiftedBy(-8).toFixed(2));
+      setEthPriceData((x) => ({
+        ...x,
+        price: formatBigNumberFn(res),
+      }));
     });
   };
+
+  useEffect(() => {
+    getLatestTimestamp(linkOracle).then((res) => {
+      setLinkPriceData((x) => ({
+        ...x,
+        lastUpdate: formatUnixTimestamp(res),
+      }));
+    });
+  }, [linkPriceData.price]);
+
+  useEffect(() => {
+    getLatestTimestamp(oracle).then((res) => {
+      setEthPriceData((x) => ({
+        ...x,
+        lastUpdate: formatUnixTimestamp(res),
+      }));
+    });
+  }, [ethPriceData.price]);
 
   useEffect(() => {
     updateData();
     updateLink();
   }, []);
   return (
-    <div>
-      <h2>{title}</h2>
-      <p>
-        Using{" "}
-        <a target="_blank" href="https://chain.link">
+    <Wrapper>
+      <h1 style={{ textAlign: "center" }}>{title}</h1>
+      <h2>Price Data</h2>
+      <LatestPrice
+        coin="ETH"
+        lastUpdated={ethPriceData.lastUpdate}
+        price={ethPriceData.price}
+        onClick={updateData}
+      />
+      <LatestPrice
+        coin="Link"
+        lastUpdated={linkPriceData.lastUpdate}
+        price={linkPriceData.price}
+        onClick={updateLink}
+      />
+      <h2>About the application</h2>
+      <h3>
+        This application is using{" "}
+        <a target="_blank" rel="noreferrer" href="https://chain.link">
           Chain.link
         </a>{" "}
-        for pricing data below.
-      </p>
-      <p>
+        to fetch pricing data from decentralized oracles and it is hosted using
+        IPFS.
+      </h3>
+      <h4>
         {" "}
         Learn more about Chainlink Price Feeds:{" "}
         <a
           target="_blank"
+          rel="noreferrer"
           href="https://docs.chain.link/docs/using-chainlink-reference-contracts"
         >
           Chainlink Docs
         </a>
-      </p>
-      <p>
+      </h4>
+      <h4>
         {" "}
         Learn more about IPFS:{" "}
-        <a target="_blank" href="https://ipfs.io">
+        <a target="_blank" rel="noreferrer" href="https://ipfs.io">
           IPFS.io
         </a>
-      </p>
-      <LatestPrice coin="ETH" price={priceData} />
-      <button onClick={updateData}>Update Price</button>
-      <LatestPrice coin="Link" price={linkPriceData} />
-      <button onClick={updateLink}>Update LINK Price</button>
-    </div>
+      </h4>
+    </Wrapper>
   );
 };
 
