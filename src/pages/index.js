@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { string } from "prop-types";
 import useInfura from "../shared/hooks/useInfura";
 import LatestPrice from "../features/EthereumData/component";
 import BigNumber from "bignumber.js";
@@ -27,7 +28,6 @@ const Index = ({ title = "NextJS IPFS Application" }) => {
         console.log(error);
         return;
       }
-      console.log("Latest price was:", res);
       setLinkPriceData(new BigNumber(res).shiftedBy(-8).toFixed(2));
     });
   };
@@ -38,26 +38,51 @@ const Index = ({ title = "NextJS IPFS Application" }) => {
         console.log(error);
         return;
       }
-      console.log("Latest price was:", res);
       setPriceData(new BigNumber(res).shiftedBy(-8).toFixed(2));
     });
   };
 
-  console.log({ oracle });
   useEffect(() => {
     updateData();
     updateLink();
   }, []);
-  console.log({ priceData });
   return (
     <div>
       <h2>{title}</h2>
+      <p>
+        Using{" "}
+        <a target="_blank" href="https://chain.link">
+          Chain.link
+        </a>{" "}
+        for pricing data below.
+      </p>
+      <p>
+        {" "}
+        Learn more about Chainlink Price Feeds:{" "}
+        <a
+          target="_blank"
+          href="https://docs.chain.link/docs/using-chainlink-reference-contracts"
+        >
+          Chainlink Docs
+        </a>
+      </p>
+      <p>
+        {" "}
+        Learn more about IPFS:{" "}
+        <a target="_blank" href="https://ipfs.io">
+          IPFS.io
+        </a>
+      </p>
       <LatestPrice coin="ETH" price={priceData} />
       <button onClick={updateData}>Update Price</button>
       <LatestPrice coin="Link" price={linkPriceData} />
       <button onClick={updateLink}>Update LINK Price</button>
     </div>
   );
+};
+
+Index.propTypes = {
+  title: string,
 };
 
 export default Index;
