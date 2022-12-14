@@ -78,7 +78,7 @@ const Index = ({ title = "NextJS IPFS Application" }) => {
   return (
     <Wrapper>
       <h1 style={{ textAlign: "center" }}>{title}</h1>
-      <h2>Price Data</h2>
+      <h2>Price Data2</h2>
       <LatestPrice
         coin="ETH"
         lastUpdated={ethPriceData.lastUpdate}
